@@ -18,7 +18,6 @@ export default async function handler(req, res) {
     if (!mbRes.ok) throw new Error("MusicBrainz fetch failed");
 
     const mbData = await mbRes.json();
-    const relations = mbData.relations || [];
     const image = await resolveImageFromRelations(
       mbData.relations || [],
       mbData.name
