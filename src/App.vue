@@ -25,4 +25,5 @@ function handleArtistSelected({ artist, image }) {
   selectedArtist.value = artist
   artistImage.value = image
 }
+
 </script>
