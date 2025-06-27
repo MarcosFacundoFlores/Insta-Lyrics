@@ -1,66 +1,68 @@
 <template>
   <div class="flex flex-col items-center p-4 relative overflow-hidden min-h-screen">
-    <!-- Imagenes -->
-    <div class="relative flex justify-center items-center h-60 w-full">
-      <!-- Imagen del artista -->
-      <img
-        v-if="selectedArtistImage"
-        :src="selectedArtistImage"
-        alt="Foto del artista"
-        class="w-40 h-40 object-cover rounded-full shadow absolute"
-        :class="{
-          'left-1/2 -translate-x-1/2': !showAlbumImage,
-          'left-[25%] -translate-x-1/2': showAlbumImage,
-        }"
-      />
+    <ImageStack :images="imageStack" />
 
-      <!-- Imagen del álbum -->
-      <img
-        v-if="showAlbumImage && selectedAlbumImage"
-        :src="selectedAlbumImage"
-        alt="Foto del álbum"
-        class="w-40 h-40 object-cover rounded-full shadow right-[25%]"
-      />
-    </div>
+    <!-- Inputs -->
+    <transition name="fade-down" @after-leave="onArtistInputLeave">
+      <div v-if="inputStep === 'artist'" key="artist" class="w-full">
+        <ArtistSearch @artist-selected="handleArtistSelected" />
+      </div>
+    </transition>
 
-    <!-- Input artista -->
-    <div v-if="inputStep === 'artist'" class="w-full mt-8">
-      <ArtistSearch @artist-selected="handleArtistSelected" />
-    </div>
-
-    <!-- Input canción -->
-    <div v-if="inputStep === 'song'" class="w-full mt-8">
-      <SongSearch :artist="selectedArtist" @song-selected="handleSongSelected" />
-    </div>
+    <transition name="fade-up">
+      <div v-if="inputStep === 'song'" key="song" class="w-full">
+        <SongSearch :artist="selectedArtist" @song-selected="handleSongSelected" />
+      </div>
+    </transition>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import ArtistSearch from './components/ArtistSearch.vue'
-import SongSearch from './components/SongSearch.vue'
+import { ref, watch } from "vue"
+import ImageStack from "./components/ImageStack.vue"
+import ArtistSearch from "./components/ArtistSearch.vue"
+import SongSearch from "./components/SongSearch.vue"
+
+const inputStep = ref("artist")
 
 const selectedArtist = ref(null)
 const selectedArtistImage = ref(null)
 const selectedAlbumImage = ref(null)
 
-const inputStep = ref('artist') // 'artist' | 'song'
-const showAlbumImage = ref(false)
+const imageStack = ref([])
 
 function handleArtistSelected({ artist, image }) {
   selectedArtist.value = artist
   selectedArtistImage.value = image
-  selectedAlbumImage.value = null
-  showAlbumImage.value = false
+
+  imageStack.value.push({
+    key: 'artist',
+    src: image,
+    class: 'w-40 h-40 rounded-full left-1/2 -translate-x-1/2',
+  })
+
+  inputStep.value = 'artist-leaving'
+}
+
+function onArtistInputLeave() {
   inputStep.value = 'song'
 }
 
 function handleSongSelected({ song, image }) {
-  selectedAlbumImage.value = image || null
-  showAlbumImage.value = !!image
+  selectedAlbumImage.value = image
+
+  imageStack.value = imageStack.value.map(img =>
+    img.key === 'artist'
+      ? { ...img, class: 'w-40 h-40 rounded-full left-[25%] -translate-x-1/2' }
+      : img
+  )
+
+  imageStack.value.push({
+    key: 'album',
+    src: image,
+    class: 'w-32 h-32 rounded-xl right-[25%]',
+  })
+
+  inputStep.value = 'generate'
 }
 </script>
-
-<style scoped>
-/* No transitions, just layout */
-</style>

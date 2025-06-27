@@ -14,27 +14,15 @@ export function useSongImage() {
       const res = await fetch(
         `/api/song-image?mbid=${encodeURIComponent(mbid)}`
       );
+      const data = await res.json();
 
-      let data;
-      try {
-        data = await res.json();
-      } catch (jsonError) {
-        const text = await res.text();
-        console.error("❌ Respuesta no-JSON:", text);
-        throw new Error("Respuesta inválida del servidor");
-      }
-
-      if (res.ok && data?.image) {
+      if (res.ok) {
         imageUrl.value = data.image;
       } else {
         error.value = data?.error || "No se encontró imagen";
       }
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        error.value = e.message;
-      } else {
-        error.value = "Error desconocido";
-      }
+    } catch (e) {
+      error.value = "Network Error";
     } finally {
       loading.value = false;
     }

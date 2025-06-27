@@ -18,6 +18,7 @@ export default async function handler(req, res) {
     // Buscar carátula del release
     const coverRes = await fetch(`https://coverartarchive.org/release/${release.id}`)
     const coverData = await coverRes.json()
+    console.log(coverData);
     const image = coverData.images?.[0]?.image
 
     if (image) {
