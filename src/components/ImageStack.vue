@@ -1,14 +1,34 @@
-<template>
-  <div class="w-full h-48 flex items-center justify-center">
+<!-- <template>
+  <div class="w-full h-64 flex items-center justify-center">
     <div class="flex items-center justify-center gap-12">
+        <img
+          v-for="img in images"
+          :key="img.key"
+          :src="img.src"
+          :alt="img.alt || ''"
+          class="w-64 h-64 object-cover rounded-full shadow"
+        />
+    </div>
+  </div>
+</template> -->
+
+
+
+<template>
+  <div class="w-full h-64 flex items-center justify-center">
+    <transition-group
+      name="fade-image"
+      tag="div"
+      class="flex items-center justify-center gap-12"
+    >
       <img
         v-for="img in images"
         :key="img.key"
         :src="img.src"
         :alt="img.alt || ''"
-        class="w-32 h-32 object-cover rounded-full shadow"
+        class="w-64 h-64 object-cover rounded-full shadow"
       />
-    </div>
+    </transition-group>
   </div>
 </template>
 
@@ -19,5 +39,26 @@ defineProps({
     required: true,
     // [{ key: string, src: string, alt?: string }]
   },
-})
+});
 </script>
+
+<style scoped>
+/* Fade + slide for entering images */
+.fade-image-enter-active {
+  transition: all 0.5s ease;
+}
+.fade-image-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.fade-image-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ensure no flicker or collapse on move (if needed later) */
+.fade-image-move {
+  transition: transform 0.5s ease;
+}
+</style>
+

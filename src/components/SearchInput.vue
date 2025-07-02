@@ -12,7 +12,7 @@
     <!-- Spinner -->
     <div
       v-if="loading"
-      class="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 shadow rounded flex items-center justify-center py-3 z-50"
+      class="absolute top-full left-0 mt-1 w-full border border-gray-200 shadow rounded flex items-center justify-center py-3 z-50"
     >
       <svg
         class="animate-spin h-5 w-5 text-gray-500"
@@ -32,13 +32,13 @@
     <!-- Lista de sugerencias -->
     <ul
       v-if="suggestions.length"
-      class="absolute top-full left-0 mt-1 w-full border rounded bg-white shadow max-h-96 overflow-y-auto z-50"
+      class="absolute top-full left-0 mt-1 w-full border rounded shadow max-h-96 overflow-y-auto z-50"
     >
       <li
         v-for="item in suggestions"
         :key="item.id"
         @click="selectItem(item)"
-        class="p-2 hover:bg-gray-100 cursor-pointer transition"
+        class="p-2 hover:bg-gray-700 cursor-pointer transition"
       >
         <slot name="suggestion" :item="item">
           {{ item.name }}

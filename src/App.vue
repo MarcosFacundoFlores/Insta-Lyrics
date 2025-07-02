@@ -4,15 +4,16 @@
   >
     <ImageStack :images="imageStack" />
 
-    <!-- Inputs -->
+    <!-- Input artista -->
     <transition name="fade-down" @after-leave="onArtistInputLeave">
-      <div v-if="inputStep === 'artist'" key="artist" class="w-full">
+      <div v-if="inputStep === 'artist'" key="artist" class="w-full mt-8">
         <ArtistSearch @artist-selected="handleArtistSelected" />
       </div>
     </transition>
 
+    <!-- Input canción -->
     <transition name="fade-up">
-      <div v-if="inputStep === 'song'" key="song" class="w-full">
+      <div v-if="inputStep === 'song'" key="song" class="w-full mt-8">
         <SongSearch
           :artist="selectedArtist"
           @song-selected="handleSongSelected"
@@ -20,16 +21,19 @@
       </div>
     </transition>
 
-    <SongInfo
-      v-if="selectedArtist && selectedSong"
-      :artist-name="selectedArtist.name"
-      :song-title="selectedSong.title"
-    />
-
-    <GenerateButton
-      v-if="selectedArtist && selectedSong"
-      @generate="handleGenerate"
-    />
+    <transition name="fade-up">
+      <SongInfo
+        v-if="selectedArtist && selectedSong"
+        :artist-name="selectedArtist.name"
+        :song-title="selectedSong.title"
+      />
+    </transition>
+    <transition name="fade-up">
+      <GenerateButton
+        v-if="selectedArtist && selectedSong"
+        @generate="handleGenerate"
+      />
+    </transition>
   </div>
 </template>
 
@@ -86,3 +90,23 @@ function handleGenerate() {
   // Acá vas a colocar la lógica futura para componer la historia de Instagram
 }
 </script>
+
+<style scoped>
+/* Transición de salida hacia abajo */
+.fade-down-leave-active {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.fade-down-leave-to {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+/* Transición de entrada hacia arriba */
+.fade-up-enter-active {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.fade-up-enter-from {
+  opacity: 0;
+  transform: translateY(40px);
+}
+</style>
