@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-col items-center p-4 relative overflow-hidden min-h-screen">
+  <div
+    class="flex flex-col items-center p-4 relative overflow-hidden min-h-screen"
+  >
     <ImageStack :images="imageStack" />
 
     <!-- Inputs -->
@@ -11,58 +13,76 @@
 
     <transition name="fade-up">
       <div v-if="inputStep === 'song'" key="song" class="w-full">
-        <SongSearch :artist="selectedArtist" @song-selected="handleSongSelected" />
+        <SongSearch
+          :artist="selectedArtist"
+          @song-selected="handleSongSelected"
+        />
       </div>
     </transition>
+
+    <SongInfo
+      v-if="selectedArtist && selectedSong"
+      :artist-name="selectedArtist.name"
+      :song-title="selectedSong.title"
+    />
+
+    <GenerateButton
+      v-if="selectedArtist && selectedSong"
+      @generate="handleGenerate"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
-import ImageStack from "./components/ImageStack.vue"
-import ArtistSearch from "./components/ArtistSearch.vue"
-import SongSearch from "./components/SongSearch.vue"
+import { ref, watch } from "vue";
+import ImageStack from "./components/ImageStack.vue";
+import ArtistSearch from "./components/ArtistSearch.vue";
+import SongSearch from "./components/SongSearch.vue";
+import SongInfo from "./components/SongInfo.vue";
+import GenerateButton from "./components/GenerateButton.vue";
 
-const inputStep = ref("artist")
+const inputStep = ref("artist");
 
-const selectedArtist = ref(null)
-const selectedArtistImage = ref(null)
-const selectedAlbumImage = ref(null)
+const selectedArtist = ref(null);
+const selectedArtistImage = ref(null);
+const selectedAlbumImage = ref(null);
+const selectedSong = ref(null);
 
-const imageStack = ref([])
+const imageStack = ref([]);
 
 function handleArtistSelected({ artist, image }) {
-  selectedArtist.value = artist
-  selectedArtistImage.value = image
+  selectedArtist.value = artist;
+  selectedArtistImage.value = image;
 
-  imageStack.value.push({
-    key: 'artist',
-    src: image,
-    class: 'w-40 h-40 rounded-full left-1/2 -translate-x-1/2',
-  })
+  imageStack.value = [
+    {
+      key: "artist",
+      src: selectedArtistImage.value,
+      alt: selectedArtist.value?.name || "",
+    },
+  ];
 
-  inputStep.value = 'artist-leaving'
+  inputStep.value = "artist-leaving";
 }
 
 function onArtistInputLeave() {
-  inputStep.value = 'song'
+  inputStep.value = "song";
 }
 
 function handleSongSelected({ song, image }) {
-  selectedAlbumImage.value = image
-
-  imageStack.value = imageStack.value.map(img =>
-    img.key === 'artist'
-      ? { ...img, class: 'w-40 h-40 rounded-full left-[25%] -translate-x-1/2' }
-      : img
-  )
-
+  selectedAlbumImage.value = image;
+  selectedSong.value = song;
   imageStack.value.push({
-    key: 'album',
-    src: image,
-    class: 'w-32 h-32 rounded-xl right-[25%]',
-  })
+    key: "album",
+    src: selectedAlbumImage.value,
+    alt: "Carátula del álbum",
+  });
 
-  inputStep.value = 'generate'
+  inputStep.value = "generate";
+}
+
+function handleGenerate() {
+  console.log("Generar imagen con letra 🎶");
+  // Acá vas a colocar la lógica futura para componer la historia de Instagram
 }
 </script>
