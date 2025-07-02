@@ -28,11 +28,12 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 1280px;
   min-height: 100vh;
   background-color: #121212;
   color: #e0e0e0;
+  overflow-x: hidden; /* opcional: previene scroll horizontal accidental */
 }
+
 
 h1 {
   font-size: 3.2em;

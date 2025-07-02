@@ -15,22 +15,23 @@
 
 
 <template>
-  <div class="w-full h-64 flex items-center justify-center">
+  <div class="w-full h-auto flex items-center justify-center">
     <transition-group
       name="fade-image"
       tag="div"
-      class="flex items-center justify-center gap-12"
+      class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12"
     >
       <img
         v-for="img in images"
         :key="img.key"
         :src="img.src"
         :alt="img.alt || ''"
-        class="w-64 h-64 object-cover rounded-full shadow"
+        class="w-48 h-48 sm:w-64 sm:h-64 object-cover rounded-full shadow"
       />
     </transition-group>
   </div>
 </template>
+
 
 <script setup>
 defineProps({
