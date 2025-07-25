@@ -1,19 +1,3 @@
-<!-- <template>
-  <div class="w-full h-64 flex items-center justify-center">
-    <div class="flex items-center justify-center gap-12">
-        <img
-          v-for="img in images"
-          :key="img.key"
-          :src="img.src"
-          :alt="img.alt || ''"
-          class="w-64 h-64 object-cover rounded-full shadow"
-        />
-    </div>
-  </div>
-</template> -->
-
-
-
 <template>
   <div class="w-full h-auto flex items-center justify-center">
     <transition-group

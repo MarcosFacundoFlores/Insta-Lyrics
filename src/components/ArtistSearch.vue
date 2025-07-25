@@ -4,7 +4,16 @@
     placeholder="Buscar artista..."
     :fetchSuggestions="fetchArtists"
     @select="selectArtist"
-  />
+  >
+    <template #suggestion="{ item }">
+      <div>
+        <div class="font-medium">{{ item.name }}</div>
+        <div v-if="item.subtitle" class="text-sm text-gray-400">
+          {{ item.subtitle }}
+        </div>
+      </div>
+    </template>
+  </SearchInput>
 </template>
 
 <script setup>
@@ -21,7 +30,12 @@ async function fetchArtists(query) {
     headers: { 'User-Agent': 'InstaLyricsApp/1.0' },
   })
   const data = await res.json()
-  return data.artists?.slice(0, 10) || []
+
+  return (data.artists?.slice(0, 10) || []).map(artist => ({
+    ...artist,
+    name: artist.name,
+    subtitle: artist.disambiguation || '', // lo pasamos como subtitle
+  }))
 }
 
 async function selectArtist(artist) {

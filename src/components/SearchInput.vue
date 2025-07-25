@@ -20,12 +20,15 @@
         fill="none"
         viewBox="0 0 24 24"
       >
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8v8z"
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
         />
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
       </svg>
     </div>
 
@@ -49,47 +52,47 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
 const props = defineProps({
-  label: { type: String, default: 'Buscar' },
-  placeholder: { type: String, default: 'Buscar...' },
+  label: { type: String, default: "Buscar" },
+  placeholder: { type: String, default: "Buscar..." },
   fetchSuggestions: { type: Function, required: true },
-})
-const emit = defineEmits(['select'])
+});
+const emit = defineEmits(["select"]);
 
-const searchTerm = ref('')
-const suggestions = ref([])
-const loading = ref(false)
-let timeout
+const searchTerm = ref("");
+const suggestions = ref([]);
+const loading = ref(false);
+let timeout;
 
 async function onInput() {
-  clearTimeout(timeout)
-  suggestions.value = []
+  clearTimeout(timeout);
+  suggestions.value = [];
 
   if (searchTerm.value.length < 2) {
-    loading.value = false
-    return
+    loading.value = false;
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
 
   timeout = setTimeout(async () => {
     try {
-      const result = await props.fetchSuggestions(searchTerm.value)
-      suggestions.value = result
+      const result = await props.fetchSuggestions(searchTerm.value);
+      suggestions.value = result;
     } catch (e) {
-      console.warn('Error fetching suggestions:', e)
-      suggestions.value = []
+      console.warn("Error fetching suggestions:", e);
+      suggestions.value = [];
     } finally {
-      loading.value = false
+      loading.value = false;
     }
-  }, 500)
+  }, 500);
 }
 
 function selectItem(item) {
-  searchTerm.value = item.name
-  suggestions.value = []
-  emit('select', item)
+  searchTerm.value = item.name;
+  suggestions.value = [];
+  emit("select", item);
 }
 </script>
